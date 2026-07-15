@@ -61,12 +61,19 @@ def download_cv(request):
         return custom_response(success=False, error="CV not found", status_code=404)
 
     try:
+        file_path = config.cv_file.path
+        if not os.path.exists(file_path):
+            # Fallback for initially seeded DB where file exists in repo but not in volume
+            import os
+            file_path = os.path.join(settings.BASE_DIR, 'media', config.cv_file.name)
+            
         return FileResponse(
-            open(config.cv_file.path, 'rb'),
+            open(file_path, 'rb'),
             as_attachment=True,
             filename="CV.pdf"
         )
-    except:
+    except Exception as e:
+        print("CV Download Error:", e)
         raise Http404
 
 
@@ -116,21 +123,25 @@ def submit_contact(request):
             </div>
             """
 
-            email = EmailMultiAlternatives(
-                subject=f"Portfolio Message from {msg.name}",
-                body=email_body,
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                to=[recipient],
-            )
-            email.attach_alternative(html_content, "text/html")
-            
-            email.send(fail_silently=False)
+            def send_email_async():
+                try:
+                    email = EmailMultiAlternatives(
+                        subject=f"Portfolio Message from {msg.name}",
+                        body=email_body,
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        to=[recipient],
+                    )
+                    email.attach_alternative(html_content, "text/html")
+                    email.send(fail_silently=True)
+                except Exception as e:
+                    print(f"Async email sending failed: {e}")
+
+            # Run in background so it doesn't block UI if Railway SMTP times out
+            thread = threading.Thread(target=send_email_async)
+            thread.start()
 
         except Exception as e:
-            print("Email error:", e)
-            import traceback
-            traceback.print_exc()
-            return custom_response(success=False, error=f"Message saved but email failed: {str(e)}", status_code=500)
+            print("Email preparation error:", e)
 
         return custom_response(data={"message": "Message sent"}, status_code=201)
 
