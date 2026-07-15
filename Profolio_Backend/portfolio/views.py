@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.http import FileResponse, Http404
+import os
 from django.core.mail import EmailMultiAlternatives
 
 from rest_framework import viewsets, status
