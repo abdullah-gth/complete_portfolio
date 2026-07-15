@@ -123,31 +123,23 @@ def submit_contact(request):
             </div>
             """
 
-            def send_email_async():
-                try:
-                    import resend
-                    resend.api_key = os.environ.get("RESEND_API_KEY", "")
-                    if resend.api_key:
-                        params = {
-                            "from": "Portfolio <onboarding@resend.dev>",
-                            "to": [recipient],
-                            "subject": f"Portfolio Message from {msg.name}",
-                            "html": html_content,
-                            "reply_to": msg.email
-                        }
-                        resend.Emails.send(params)
-                        print("Resend email sent successfully!")
-                    else:
-                        print("RESEND_API_KEY not found in environment.")
-                except Exception as e:
-                    print(f"Async email sending failed: {e}")
-
-            # Run in background so it doesn't block UI if Railway API times out
-            thread = threading.Thread(target=send_email_async)
-            thread.start()
+            import resend
+            resend.api_key = os.environ.get("RESEND_API_KEY", "")
+            if resend.api_key:
+                params = {
+                    "from": "Portfolio <onboarding@resend.dev>",
+                    "to": [recipient],
+                    "subject": f"Portfolio Message from {msg.name}",
+                    "html": html_content,
+                    "reply_to": msg.email
+                }
+                resend_res = resend.Emails.send(params)
+                print("Resend Response:", resend_res)
+            else:
+                return custom_response(success=False, error="RESEND_API_KEY is missing", status_code=500)
 
         except Exception as e:
-            print("Email preparation error:", e)
+            return custom_response(success=False, error=f"Email failed: {str(e)}", status_code=500)
 
         return custom_response(data={"message": "Message sent"}, status_code=201)
 
