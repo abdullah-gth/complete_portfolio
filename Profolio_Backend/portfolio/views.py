@@ -64,7 +64,6 @@ def download_cv(request):
     try:
         file_path = config.cv_file.path
         if not os.path.exists(file_path):
-            # Fallback for initially seeded DB where file exists in repo but not in volume
             file_path = os.path.join(settings.BASE_DIR, 'media', config.cv_file.name)
             
         return FileResponse(
