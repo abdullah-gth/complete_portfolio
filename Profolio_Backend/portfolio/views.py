@@ -75,7 +75,7 @@ def download_cv(request):
         )
     except Exception as e:
         print("CV Download Error:", e)
-        raise Http404
+        return custom_response(success=False, error=f"Error opening CV: {str(e)} | Path: {file_path}", status_code=500)
 
 
 import threading
