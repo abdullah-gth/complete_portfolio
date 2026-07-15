@@ -125,18 +125,24 @@ def submit_contact(request):
 
             def send_email_async():
                 try:
-                    email = EmailMultiAlternatives(
-                        subject=f"Portfolio Message from {msg.name}",
-                        body=email_body,
-                        from_email=settings.DEFAULT_FROM_EMAIL,
-                        to=[recipient],
-                    )
-                    email.attach_alternative(html_content, "text/html")
-                    email.send(fail_silently=True)
+                    import resend
+                    resend.api_key = os.environ.get("RESEND_API_KEY", "")
+                    if resend.api_key:
+                        params = {
+                            "from": "Portfolio <onboarding@resend.dev>",
+                            "to": [recipient],
+                            "subject": f"Portfolio Message from {msg.name}",
+                            "html": html_content,
+                            "reply_to": msg.email
+                        }
+                        resend.Emails.send(params)
+                        print("Resend email sent successfully!")
+                    else:
+                        print("RESEND_API_KEY not found in environment.")
                 except Exception as e:
                     print(f"Async email sending failed: {e}")
 
-            # Run in background so it doesn't block UI if Railway SMTP times out
+            # Run in background so it doesn't block UI if Railway API times out
             thread = threading.Thread(target=send_email_async)
             thread.start()
 
