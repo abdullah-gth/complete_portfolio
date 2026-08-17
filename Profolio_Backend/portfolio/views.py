@@ -213,12 +213,10 @@ def get_contact_section(request):
 def get_pricing_section(request):
     pricing_sec = PricingSection.objects.first()
     
-    # Auto-update logic: if old data exists (price was Rs 15,000), wipe it to re-seed
-    if pricing_sec and pricing_sec.packages.exists():
-        first_pkg = pricing_sec.packages.first()
-        if first_pkg.price == "Rs 15,000" or first_pkg.price == "Rs 15,000+":
-            pricing_sec.delete()
-            pricing_sec = None
+    # Auto-update logic: if force_reseed=true is passed, wipe it to re-seed
+    if pricing_sec and request.GET.get('force_reseed') == 'true':
+        pricing_sec.delete()
+        pricing_sec = None
 
     if not pricing_sec:
         pricing_sec = PricingSection.objects.create(
