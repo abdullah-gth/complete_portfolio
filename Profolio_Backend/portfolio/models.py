@@ -200,3 +200,26 @@ class ContactSection(models.Model):
 
     def __str__(self):
         return "Contact Section Config"
+
+class ServiceSection(models.Model):
+    badge_text = models.CharField(max_length=50, default="My Services")
+    title = models.CharField(max_length=100, default="What I")
+    title_highlight = models.CharField(max_length=100, default="Offer")
+    description = models.TextField(default="I offer a full range of web development services to help you build and grow your digital presence.")
+
+    def __str__(self):
+        return "Service Section Config"
+
+class Service(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    service_section = models.ForeignKey(ServiceSection, on_delete=models.CASCADE, related_name='services')
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    icon_name = models.CharField(max_length=50, help_text="e.g., Code, Smartphone, Globe, Palette")
+    order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return self.title

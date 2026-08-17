@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import PortfolioSettings, Skill, ContactMessage, NavbarConfig, NavbarLink, HeroSection, HeroSocialLink, FooterSection, FooterSocialLink, AboutSection, AboutStat, SkillSection, SkillCategory, ProjectSection, Project, ContactSection
+from .models import PortfolioSettings, Skill, ContactMessage, NavbarConfig, NavbarLink, HeroSection, HeroSocialLink, FooterSection, FooterSocialLink, AboutSection, AboutStat, SkillSection, SkillCategory, ProjectSection, Project, ContactSection, ServiceSection, Service
 
 
 class SkillSerializer(serializers.ModelSerializer):
@@ -123,3 +123,17 @@ class AboutSectionSerializer(serializers.ModelSerializer):
     def get_stats(self, obj):
         stats = obj.stats.all().order_by('order')
         return AboutStatSerializer(stats, many=True).data
+
+class ServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Service
+        fields = ['id', 'title', 'description', 'icon_name', 'order']
+
+class ServiceSectionSerializer(serializers.ModelSerializer):
+    services = serializers.SerializerMethodField()
+    class Meta:
+        model = ServiceSection
+        fields = "__all__"
+    def get_services(self, obj):
+        services = obj.services.all().order_by('order')
+        return ServiceSerializer(services, many=True).data

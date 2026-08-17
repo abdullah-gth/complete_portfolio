@@ -12,7 +12,8 @@ from .views import (
     get_about_section,
     get_skills_section,
     get_projects_section,
-    get_contact_section
+    get_contact_section,
+    get_services_section
 )
 
 router = DefaultRouter()
@@ -27,6 +28,7 @@ urlpatterns = [
     path('about/', get_about_section),
     path('skills-config/', get_skills_section),
     path('projects-config/', get_projects_section),
+    path('services-config/', get_services_section),
     path('contact-config/', get_contact_section),
     path('footer/', get_footer_section),
     path('download-cv/', download_cv),

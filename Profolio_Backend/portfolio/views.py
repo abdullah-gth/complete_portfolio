@@ -8,8 +8,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 
-from .models import Skill, ContactMessage, PortfolioSettings, NavbarConfig, NavbarLink, HeroSection, FooterSection, AboutSection, SkillSection, ProjectSection, Project, ContactSection
-from .serializers import SkillSerializer, ContactSerializer, NavbarConfigSerializer, NavbarLinkSerializer, HeroSectionSerializer, FooterSectionSerializer, AboutSectionSerializer, SkillSectionSerializer, ProjectSectionSerializer, ContactSectionSerializer
+from .models import Skill, ContactMessage, PortfolioSettings, NavbarConfig, NavbarLink, HeroSection, FooterSection, AboutSection, SkillSection, ProjectSection, Project, ContactSection, ServiceSection
+from .serializers import SkillSerializer, ContactSerializer, NavbarConfigSerializer, NavbarLinkSerializer, HeroSectionSerializer, FooterSectionSerializer, AboutSectionSerializer, SkillSectionSerializer, ProjectSectionSerializer, ContactSectionSerializer, ServiceSectionSerializer
 
 
 def custom_response(success=True, data=None, error=None, status_code=status.HTTP_200_OK):
@@ -205,4 +205,13 @@ def get_contact_section(request):
     if not contact_sec:
         return custom_response(data=None)
     serializer = ContactSectionSerializer(contact_sec)
+    return custom_response(data=serializer.data)
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_services_section(request):
+    services_sec = ServiceSection.objects.first()
+    if not services_sec:
+        return custom_response(data=None)
+    serializer = ServiceSectionSerializer(services_sec)
     return custom_response(data=serializer.data)
