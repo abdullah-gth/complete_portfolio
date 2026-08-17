@@ -44,14 +44,14 @@ const ServicesPricing = () => {
           {pricingData.packages?.map((pkg: any) => (
             <div
               key={pkg.id}
-              className={`relative flex flex-col p-8 rounded-3xl transition-all duration-500 bg-background border overflow-hidden group ${
+              className={`relative flex flex-col p-8 rounded-3xl transition-all duration-500 bg-background border group ${
                 pkg.highlighted 
                   ? "border-primary shadow-[0_0_40px_rgba(var(--primary),0.15)] md:-translate-y-4 hover:-translate-y-6 hover:shadow-[0_0_60px_rgba(var(--primary),0.25)]" 
                   : "border-border shadow-card hover:shadow-2xl hover:border-primary/40 hover:-translate-y-3"
               }`}
             >
               {/* Subtle gradient background on hover */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-3xl" />
 
               {pkg.highlighted && (
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
