@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import PortfolioSettings, Skill, ContactMessage, NavbarConfig, NavbarLink, HeroSection, HeroSocialLink, FooterSection, FooterSocialLink, AboutSection, AboutStat, SkillSection, SkillCategory, ProjectSection, Project, ContactSection
+from .models import PortfolioSettings, Skill, ContactMessage, NavbarConfig, NavbarLink, HeroSection, HeroSocialLink, FooterSection, FooterSocialLink, AboutSection, AboutStat, SkillSection, SkillCategory, ProjectSection, Project, ContactSection, PricingSection, PricingPackage
 
 
 class SkillSerializer(serializers.ModelSerializer):
@@ -123,3 +123,26 @@ class AboutSectionSerializer(serializers.ModelSerializer):
     def get_stats(self, obj):
         stats = obj.stats.all().order_by('order')
         return AboutStatSerializer(stats, many=True).data
+
+class PricingPackageSerializer(serializers.ModelSerializer):
+    feature_list = serializers.SerializerMethodField()
+
+    class Meta:
+        model = PricingPackage
+        fields = ['id', 'title', 'price', 'description', 'features', 'feature_list', 'highlighted', 'cta_text', 'order']
+
+    def get_feature_list(self, obj):
+        if not obj.features:
+            return []
+        return [f.strip() for f in obj.features.strip().split('\n') if f.strip()]
+
+class PricingSectionSerializer(serializers.ModelSerializer):
+    packages = serializers.SerializerMethodField()
+
+    class Meta:
+        model = PricingSection
+        fields = "__all__"
+
+    def get_packages(self, obj):
+        packages = obj.packages.all().order_by('order')
+        return PricingPackageSerializer(packages, many=True).data

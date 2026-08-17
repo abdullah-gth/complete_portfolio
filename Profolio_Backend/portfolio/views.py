@@ -8,8 +8,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 
-from .models import Skill, ContactMessage, PortfolioSettings, NavbarConfig, NavbarLink, HeroSection, FooterSection, AboutSection, SkillSection, ProjectSection, Project, ContactSection
-from .serializers import SkillSerializer, ContactSerializer, NavbarConfigSerializer, NavbarLinkSerializer, HeroSectionSerializer, FooterSectionSerializer, AboutSectionSerializer, SkillSectionSerializer, ProjectSectionSerializer, ContactSectionSerializer
+from .models import Skill, ContactMessage, PortfolioSettings, NavbarConfig, NavbarLink, HeroSection, FooterSection, AboutSection, SkillSection, ProjectSection, Project, ContactSection, PricingSection, PricingPackage
+from .serializers import SkillSerializer, ContactSerializer, NavbarConfigSerializer, NavbarLinkSerializer, HeroSectionSerializer, FooterSectionSerializer, AboutSectionSerializer, SkillSectionSerializer, ProjectSectionSerializer, ContactSectionSerializer, PricingSectionSerializer
 
 
 def custom_response(success=True, data=None, error=None, status_code=status.HTTP_200_OK):
@@ -206,4 +206,59 @@ def get_contact_section(request):
     if not contact_sec:
         return custom_response(data=None)
     serializer = ContactSectionSerializer(contact_sec)
+    return custom_response(data=serializer.data)
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_pricing_section(request):
+    pricing_sec = PricingSection.objects.first()
+    if not pricing_sec:
+        pricing_sec = PricingSection.objects.create(
+            badge_text="Services & Pricing",
+            title="Premium Web",
+            title_highlight="Packages",
+            description="Clear, transparent pricing. From simple landing pages to complex full-stack web applications."
+        )
+        PricingPackage.objects.create(
+            pricing_section=pricing_sec,
+            title="Landing Page",
+            price="Rs 15,000",
+            description="Perfect for personal portfolios or product showcases.",
+            features="Single Page Application\nFully Responsive Design\nContact Form Integration\nBasic SEO Setup\n3 Revisions",
+            highlighted=False,
+            cta_text="Start Project",
+            order=1
+        )
+        PricingPackage.objects.create(
+            pricing_section=pricing_sec,
+            title="Small Business",
+            price="Rs 35,000",
+            description="Ideal for small businesses needing a professional web presence.",
+            features="Up to 5 Pages\nCMS Integration (Django/Sanity)\nAdvanced SEO Optimization\nSocial Media Integration\n1 Month Free Support",
+            highlighted=True,
+            cta_text="Most Popular",
+            order=2
+        )
+        PricingPackage.objects.create(
+            pricing_section=pricing_sec,
+            title="E-Commerce",
+            price="Rs 75,000",
+            description="Complete online store to start selling your products.",
+            features="Unlimited Products\nPayment Gateway Integration\nAdmin Dashboard\nOrder Management\nCustomer Authentication",
+            highlighted=False,
+            cta_text="Start Selling",
+            order=3
+        )
+        PricingPackage.objects.create(
+            pricing_section=pricing_sec,
+            title="Custom Web App",
+            price="Let's Talk",
+            description="Complex tailored solutions for unique business models.",
+            features="Full Stack Development\nCustom RESTful APIs\nComplex Database Architecture\nScalable Infrastructure\nDedicated Maintenance",
+            highlighted=False,
+            cta_text="Get a Quote",
+            order=4
+        )
+        
+    serializer = PricingSectionSerializer(pricing_sec)
     return custom_response(data=serializer.data)

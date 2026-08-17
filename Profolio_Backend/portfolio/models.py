@@ -200,3 +200,29 @@ class ContactSection(models.Model):
 
     def __str__(self):
         return "Contact Section Config"
+
+class PricingSection(models.Model):
+    badge_text = models.CharField(max_length=50, default="Services & Pricing")
+    title = models.CharField(max_length=100, default="Premium Web")
+    title_highlight = models.CharField(max_length=100, default="Packages")
+    description = models.TextField(default="Clear, transparent pricing. From simple landing pages to complex full-stack web applications.")
+
+    def __str__(self):
+        return "Pricing Section Config"
+
+class PricingPackage(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    pricing_section = models.ForeignKey(PricingSection, on_delete=models.CASCADE, related_name='packages')
+    title = models.CharField(max_length=100)
+    price = models.CharField(max_length=50, help_text="e.g. Rs 15,000 or Let's Talk")
+    description = models.TextField()
+    features = models.TextField(help_text="Enter each feature on a new line")
+    highlighted = models.BooleanField(default=False, help_text="Make this package stand out (Recommended)")
+    cta_text = models.CharField(max_length=50, default="Start Project")
+    order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return self.title

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import (
-    ContactMessage, PortfolioSettings, NavbarConfig, NavbarLink, HeroSection, HeroSocialLink, FooterSection, FooterSocialLink, AboutSection, AboutStat, SkillSection, SkillCategory, Skill, ProjectSection, Project, ContactSection
+    ContactMessage, PortfolioSettings, NavbarConfig, NavbarLink, HeroSection, HeroSocialLink, FooterSection, FooterSocialLink, AboutSection, AboutStat, SkillSection, SkillCategory, Skill, ProjectSection, Project, ContactSection, PricingSection, PricingPackage
 )
 
 class SkillInline(admin.TabularInline):
@@ -150,3 +150,20 @@ class ContactSectionAdmin(admin.ModelAdmin):
         return False
 
     list_display = ('badge_text', 'title', 'title_highlight')
+
+class PricingPackageInline(admin.TabularInline):
+    model = PricingPackage
+    extra = 1
+
+@admin.register(PricingSection)
+class PricingSectionAdmin(admin.ModelAdmin):
+    def has_add_permission(self, request):
+        if self.model.objects.exists():
+            return False
+        return super().has_add_permission(request)
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    list_display = ('badge_text', 'title', 'title_highlight')
+    inlines = [PricingPackageInline]
