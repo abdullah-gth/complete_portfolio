@@ -212,6 +212,14 @@ def get_contact_section(request):
 @permission_classes([AllowAny])
 def get_pricing_section(request):
     pricing_sec = PricingSection.objects.first()
+    
+    # Auto-update logic: if old data exists (price was Rs 15,000), wipe it to re-seed
+    if pricing_sec and pricing_sec.packages.exists():
+        first_pkg = pricing_sec.packages.first()
+        if first_pkg.price == "Rs 15,000" or first_pkg.price == "Rs 15,000+":
+            pricing_sec.delete()
+            pricing_sec = None
+
     if not pricing_sec:
         pricing_sec = PricingSection.objects.create(
             badge_text="Services & Pricing",
@@ -222,29 +230,29 @@ def get_pricing_section(request):
         PricingPackage.objects.create(
             pricing_section=pricing_sec,
             title="Landing Page",
-            price="Rs 15,000",
-            description="Perfect for personal portfolios or product showcases.",
-            features="Single Page Application\nFully Responsive Design\nContact Form Integration\nBasic SEO Setup\n3 Revisions",
+            price="Rs 25,000+",
+            description="Perfect for personal brands, campaigns, portfolios and product launches.",
+            features="Custom Modern UI/UX\nFully Responsive Design\nSingle-Page Development\nContact Form Integration\nBasic SEO Setup\nMobile & Tablet Optimized\n2 Revision Rounds",
             highlighted=False,
-            cta_text="Start Project",
+            cta_text="Start a Project",
             order=1
         )
         PricingPackage.objects.create(
             pricing_section=pricing_sec,
             title="Small Business",
-            price="Rs 35,000",
-            description="Ideal for small businesses needing a professional web presence.",
-            features="Up to 5 Pages\nCMS Integration (Django/Sanity)\nAdvanced SEO Optimization\nSocial Media Integration\n1 Month Free Support",
+            price="Rs 45,000+",
+            description="A professional website to establish and grow your business online.",
+            features="Up to 5 Custom Pages\nCustom UI/UX Design\nFully Responsive Development\nCMS Integration\nContact & Inquiry Forms\nBasic SEO Optimization\nSocial Media Integration\n1 Month Post-Launch Support",
             highlighted=True,
-            cta_text="Most Popular",
+            cta_text="Get Started",
             order=2
         )
         PricingPackage.objects.create(
             pricing_section=pricing_sec,
             title="E-Commerce",
-            price="Rs 75,000",
-            description="Complete online store to start selling your products.",
-            features="Unlimited Products\nPayment Gateway Integration\nAdmin Dashboard\nOrder Management\nCustomer Authentication",
+            price="Rs 80,000+",
+            description="A complete online store built to manage products, orders and customers.",
+            features="Dynamic Product Management\nCategories & Attributes\nShopping Cart & Checkout\nPayment Integration\nOrder Management\nInventory Management\nCustomer Accounts\nAdmin Dashboard\nResponsive & Mobile Optimized",
             highlighted=False,
             cta_text="Start Selling",
             order=3
@@ -252,11 +260,11 @@ def get_pricing_section(request):
         PricingPackage.objects.create(
             pricing_section=pricing_sec,
             title="Custom Web App",
-            price="Let's Talk",
-            description="Complex tailored solutions for unique business models.",
-            features="Full Stack Development\nCustom RESTful APIs\nComplex Database Architecture\nScalable Infrastructure\nDedicated Maintenance",
+            price="Rs 150,000+",
+            description="Powerful, scalable web applications built around your unique business requirements.",
+            features="Custom Full-Stack Development\nComplete Admin Dashboard\nDatabase Architecture\nAuthentication & Role Management\nREST API Integration\nAdvanced Business Logic\nThird-Party Integrations\nScalable & Secure Architecture\nOngoing Maintenance Available",
             highlighted=False,
-            cta_text="Get a Quote",
+            cta_text="Build Your Solution",
             order=4
         )
         
