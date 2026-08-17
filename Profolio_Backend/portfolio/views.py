@@ -242,7 +242,7 @@ def get_pricing_section(request):
             description="A professional website to establish and grow your business online.",
             features="Up to 5 Custom Pages\nCustom UI/UX Design\nFully Responsive Development\nCMS Integration\nContact & Inquiry Forms\nBasic SEO Optimization\nSocial Media Integration\n1 Month Post-Launch Support",
             highlighted=True,
-            cta_text="Get Started",
+            cta_text="Start a Project",
             order=2
         )
         PricingPackage.objects.create(
@@ -252,7 +252,7 @@ def get_pricing_section(request):
             description="A complete online store built to manage products, orders and customers.",
             features="Dynamic Product Management\nCategories & Attributes\nShopping Cart & Checkout\nPayment Integration\nOrder Management\nInventory Management\nCustomer Accounts\nAdmin Dashboard\nResponsive & Mobile Optimized",
             highlighted=False,
-            cta_text="Start Selling",
+            cta_text="Start a Project",
             order=3
         )
         PricingPackage.objects.create(
@@ -262,7 +262,7 @@ def get_pricing_section(request):
             description="Powerful, scalable web applications built around your unique business requirements.",
             features="Custom Full-Stack Development\nComplete Admin Dashboard\nDatabase Architecture\nAuthentication & Role Management\nREST API Integration\nAdvanced Business Logic\nThird-Party Integrations\nScalable & Secure Architecture\nOngoing Maintenance Available",
             highlighted=False,
-            cta_text="Build Your Solution",
+            cta_text="Start a Project",
             order=4
         )
         
