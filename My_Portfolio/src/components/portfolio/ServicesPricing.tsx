@@ -44,40 +44,45 @@ const ServicesPricing = () => {
           {pricingData.packages?.map((pkg: any) => (
             <div
               key={pkg.id}
-              className={`relative flex flex-col p-8 rounded-3xl transition-spring bg-background border ${
+              className={`relative flex flex-col p-8 rounded-3xl transition-all duration-500 bg-background border overflow-hidden group ${
                 pkg.highlighted 
-                  ? "border-primary shadow-[0_0_40px_rgba(var(--primary),0.15)] md:-translate-y-4" 
-                  : "border-border shadow-card hover:shadow-elegant hover:-translate-y-2"
+                  ? "border-primary shadow-[0_0_40px_rgba(var(--primary),0.15)] md:-translate-y-4 hover:-translate-y-6 hover:shadow-[0_0_60px_rgba(var(--primary),0.25)]" 
+                  : "border-border shadow-card hover:shadow-2xl hover:border-primary/40 hover:-translate-y-3"
               }`}
             >
+              {/* Subtle gradient background on hover */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
               {pkg.highlighted && (
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                  <span className="bg-primary text-primary-foreground text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                  <span className="bg-primary text-primary-foreground text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider shadow-md">
                     Recommended
                   </span>
                 </div>
               )}
               
-              <div className="mb-6">
-                <h3 className="text-xl font-bold mb-2">{pkg.title}</h3>
+              <div className="mb-6 relative z-10">
+                <h3 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors duration-300">{pkg.title}</h3>
                 <p className="text-muted-foreground text-sm h-12">{pkg.description}</p>
               </div>
 
-              <div className="mb-6">
+              <div className="mb-6 relative z-10">
                 <div className="flex items-baseline gap-1">
                   {pkg.price !== "Let's Talk" && <span className="text-sm font-medium text-muted-foreground">Starting from</span>}
                 </div>
-                <div className="text-3xl font-extrabold text-foreground mt-1">
+                <div className="text-4xl font-extrabold text-foreground mt-1 tracking-tight">
                   {pkg.price}
                 </div>
               </div>
 
-              <div className="flex-grow">
-                <ul className="space-y-3 mb-8">
+              <div className="flex-grow relative z-10">
+                <ul className="space-y-4 mb-8">
                   {pkg.feature_list?.map((feature: string, i: number) => (
                     <li key={i} className="flex items-start gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-                      <span className="text-sm text-foreground/80">{feature}</span>
+                      <div className="mt-0.5 bg-primary/10 p-1 rounded-full group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+                        <CheckCircle2 className="w-4 h-4 text-primary group-hover:text-white transition-colors duration-300" />
+                      </div>
+                      <span className="text-sm text-foreground/80 font-medium">{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -85,10 +90,10 @@ const ServicesPricing = () => {
 
               <a
                 href="#contact"
-                className={`w-full py-3 px-6 rounded-xl font-medium text-center transition-colors ${
+                className={`w-full py-3.5 px-6 rounded-xl font-semibold text-center transition-all duration-300 relative z-10 ${
                   pkg.highlighted
-                    ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                    : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                    ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-1"
+                    : "bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-1"
                 }`}
               >
                 {pkg.cta_text}
