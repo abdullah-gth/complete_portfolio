@@ -8,8 +8,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 
-from .models import Skill, ContactMessage, PortfolioSettings, NavbarConfig, NavbarLink, HeroSection, FooterSection, AboutSection, SkillSection, ProjectSection, Project, ContactSection, ServiceSection
-from .serializers import SkillSerializer, ContactSerializer, NavbarConfigSerializer, NavbarLinkSerializer, HeroSectionSerializer, FooterSectionSerializer, AboutSectionSerializer, SkillSectionSerializer, ProjectSectionSerializer, ContactSectionSerializer, ServiceSectionSerializer
+from .models import Skill, ContactMessage, PortfolioSettings, NavbarConfig, NavbarLink, HeroSection, FooterSection, AboutSection, SkillSection, ProjectSection, Project, ContactSection
+from .serializers import SkillSerializer, ContactSerializer, NavbarConfigSerializer, NavbarLinkSerializer, HeroSectionSerializer, FooterSectionSerializer, AboutSectionSerializer, SkillSectionSerializer, ProjectSectionSerializer, ContactSectionSerializer
 
 
 def custom_response(success=True, data=None, error=None, status_code=status.HTTP_200_OK):
@@ -150,11 +150,6 @@ def get_navbar_links(request):
     config = NavbarConfig.objects.first()
     if not config:
         return custom_response(data=None)
-    
-    # Ensure Services link exists dynamically
-    if not config.links.filter(label__iexact='Services').exists():
-        from .models import NavbarLink
-        NavbarLink.objects.create(navbar=config, label='Services', href='#services', order=3)
         
     serializer = NavbarConfigSerializer(config)
     return custom_response(data=serializer.data)
@@ -211,24 +206,4 @@ def get_contact_section(request):
     if not contact_sec:
         return custom_response(data=None)
     serializer = ContactSectionSerializer(contact_sec)
-    return custom_response(data=serializer.data)
-
-@api_view(['GET'])
-@permission_classes([AllowAny])
-def get_services_section(request):
-    services_sec = ServiceSection.objects.first()
-    if not services_sec:
-        # Lazy seed the database if it's empty (e.g. on Railway)
-        services_sec = ServiceSection.objects.create(
-            badge_text="My Services",
-            title="What I",
-            title_highlight="Offer",
-            description="I offer a full range of web development services to help you build and grow your digital presence."
-        )
-        from .models import Service
-        Service.objects.create(service_section=services_sec, title='Frontend Development', description='Building responsive and beautiful user interfaces with React and Tailwind CSS.', icon_name='Code', order=1)
-        Service.objects.create(service_section=services_sec, title='Backend Development', description='Building scalable APIs and databases with Django and PostgreSQL.', icon_name='Database', order=2)
-        Service.objects.create(service_section=services_sec, title='API Integration', description='Connecting third-party services and payment gateways to your application.', icon_name='Globe', order=3)
-        
-    serializer = ServiceSectionSerializer(services_sec)
     return custom_response(data=serializer.data)
